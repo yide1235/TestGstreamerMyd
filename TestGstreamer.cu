@@ -120,44 +120,44 @@ void TestVideo(std::string url, std::string outUrl  ) {
 
 
 
-// int main(int argc, char* argv[]) {
-// 	gst_init(&argc, &argv);
-// 	std::string inputUrl(argv[1]);
-// 	std::string outputUrl(argv[2]);
-// 	std::cout << "read video:" << inputUrl << std::endl;
-// 	TestVideo(inputUrl, outputUrl);
-// 	return 0;
-// }
 
 int main(int argc, char* argv[]) {
-    if (argc < 3) {
-        std::cerr << "Usage: " << argv[0] << " <inputUrl> <outputUrl>" << std::endl;
-        return -1;
-    }
-
-    gst_init(&argc, &argv);
-    std::string inputUrl(argv[1]);
-    std::string outputUrl(argv[2]);
-    std::cout << "read video: " << inputUrl << std::endl;
-
-    // Start measuring time
-    auto start = std::chrono::high_resolution_clock::now();
-
-    TestVideo(inputUrl, outputUrl);
-
-    // Stop measuring time and calculate the elapsed duration
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> elapsed = end - start;
-
-    std::cout << "TestVideo function took " << elapsed.count() << " milliseconds." << std::endl;
-
-    return 0;
+	gst_init(&argc, &argv);
+	std::string inputUrl(argv[1]);
+	std::string outputUrl(argv[2]);
+	std::cout << "read video:" << inputUrl << std::endl;
+	TestVideo(inputUrl, outputUrl);
+	return 0;
 }
 
 
+// // main function code for testing inference time
+// int main(int argc, char* argv[]) {
+//     if (argc < 3) {
+//         std::cerr << "Usage: " << argv[0] << " <inputUrl> <outputUrl>" << std::endl;
+//         return -1;
+//     }
 
-// // to run: cmake .. && make 
-// // && cd .. && ./TestGstreamer ./1.mp4 ./output.mp4 && cd build
+//     gst_init(&argc, &argv);
+//     std::string inputUrl(argv[1]);
+//     std::string outputUrl(argv[2]);
+//     std::cout << "read video: " << inputUrl << std::endl;
+
+//     // Start measuring time
+//     auto start = std::chrono::high_resolution_clock::now();
+
+//     TestVideo(inputUrl, outputUrl);
+
+//     // Stop measuring time and calculate the elapsed duration
+//     auto end = std::chrono::high_resolution_clock::now();
+//     std::chrono::duration<double, std::milli> elapsed = end - start;
+
+//     std::cout << "TestVideo function took " << elapsed.count() << " milliseconds." << std::endl;
+
+//     return 0;
+// }
+
+
 
 
 // //nvcc TestGstreamer.cu GstreamerReaderRAW.cpp VideoWriterRaw.cpp -I/usr/local/include/opencv4 -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -L/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Xlinker -rpath -Xlinker /usr/local/lib -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0 -o TestGstreamer && ./TestGstreamer ./1.mp4 ./1_output.mp4

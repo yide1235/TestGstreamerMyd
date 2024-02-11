@@ -52,6 +52,7 @@ bool VideoReaderRaw::yuv420_to_rgb888(const std::vector<unsigned char>& yuv, int
 }
 
 
+
 static inline void QtdemuxPadAddedCb(GstElement* qtdemux, GstPad* pad, GstElement* queue) {
 	gst_element_link_pads(qtdemux, GST_PAD_NAME(pad), queue, nullptr);
 }
@@ -240,6 +241,7 @@ int VideoReaderRaw::Open(const std::string& url) {
 
 
 int VideoReaderRaw::Read(std::vector<unsigned char>& frame, double& timestamp) {
+	// //if need to record the frameCount.
 	// frameCount++; 
 
 	return RecvDecodedFrame(frame, timestamp);
@@ -266,7 +268,7 @@ int VideoReaderRaw::GetHeight() {
     return paddedHeight_;
 }
 
-
+// //function for record frame
 // int VideoReaderRaw::GetFrameCount() const {
 //     return frameCount;
 // }

@@ -60,8 +60,8 @@ int VideoWriterRaw::Open(const std::string url) {
     g_object_set(G_OBJECT(sink_), "location", url.c_str(), nullptr);
 
 
-    // g_object_set(G_OBJECT(encoder_), "bitrate", 10000000 + bitrate_ / 1000, nullptr);
-    g_object_set(G_OBJECT(encoder_), "bitrate", 0, "pass", 0, "quantizer", 18, nullptr);
+    g_object_set(G_OBJECT(encoder_), "bitrate", 10000000 + bitrate_ / 1000, nullptr);
+    // g_object_set(G_OBJECT(encoder_), "bitrate", 0, "pass", 0, "quantizer", 18, nullptr);
 
     // g_object_set(G_OBJECT(encoder_), "preset", "high", "tune", "zerolatency", nullptr);
     // g_object_set(G_OBJECT(encoder_), "preset", "slow", "tune", "zerolatency", "bitrate", 4000, nullptr);
