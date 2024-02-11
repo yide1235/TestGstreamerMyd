@@ -1,6 +1,7 @@
 #include "GstreamerReaderRAW.h"
 #include <iostream>
 
+
 bool VideoReaderRaw::yuv420_to_rgb888(const std::vector<unsigned char>& yuv, int width, int height, std::vector<unsigned char>& rgb) {
 	int uvSize = width * height / 4;
 
@@ -54,6 +55,7 @@ bool VideoReaderRaw::yuv420_to_rgb888(const std::vector<unsigned char>& yuv, int
 static inline void QtdemuxPadAddedCb(GstElement* qtdemux, GstPad* pad, GstElement* queue) {
 	gst_element_link_pads(qtdemux, GST_PAD_NAME(pad), queue, nullptr);
 }
+
 
 
 static inline void ErrHandle(GstElement* pipeline) {
@@ -160,6 +162,8 @@ int VideoReaderRaw::RecvDecodedFrame(std::vector<unsigned char>& frame, double& 
 
 int VideoReaderRaw::Open(const std::string& url) {
 	// create the elements
+
+	//
 	source_ = gst_element_factory_make("filesrc", "InputFile");
 	qtdemux_ = gst_element_factory_make("qtdemux", "QtDemux");
 	queue_ = gst_element_factory_make("queue", "QueueReader");

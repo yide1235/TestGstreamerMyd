@@ -4,19 +4,12 @@
 #include <iostream>
 #include "VideoWriterRaw.h"
 #include <cuda_runtime.h>
+#include <chrono>
 
 
 
-
-__global__
-void BT2020toBT709(uchar3* src, uchar3* dst, int width, int height)
-{
-    // int index = blockDim.x * blockIdx.x + threadIdx.x;
-
-    // if (index >= len)
-    // {
-    //     return;
-    // }
+// CUDA kernel for color space conversion, defined outside the class
+__global__ void BT2020toBT709(uchar3* src, uchar3* dst, int width, int height) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
 
@@ -24,16 +17,15 @@ void BT2020toBT709(uchar3* src, uchar3* dst, int width, int height)
 
     int index = y * width + x;
 
-    float R2020 = src[index].x; // Use .x for the R component
-    float G2020 = src[index].y; // Use .y for the G component
-    float B2020 = src[index].z; // Use .z for the B component
+    float R2020 = src[index].x;
+    float G2020 = src[index].y;
+    float B2020 = src[index].z;
 
-    // Apply the BT.2020 to BT.709 conversion formula
+    // Example conversion formulas
     float R709 = R2020 * 1.660491f + G2020 * -0.587641f + B2020 * -0.072850f;
     float G709 = R2020 * -0.124550f + G2020 * 1.132900f + B2020 * -0.008349f;
     float B709 = R2020 * -0.018151f + G2020 * -0.100579f + B2020 * 1.118730f;
 
-    // Clamp the results and assign to the destination
     dst[index].x = fminf(fmaxf(R709, 0.0f), 255.0f);
     dst[index].y = fminf(fmaxf(G709, 0.0f), 255.0f);
     dst[index].z = fminf(fmaxf(B709, 0.0f), 255.0f);
@@ -75,6 +67,8 @@ public:
 };
 
 
+
+
 void TestVideo(std::string url, std::string outUrl  ) {
     std::cout << "video:" << url << std::endl;
     VideoReaderRaw video;
@@ -88,7 +82,7 @@ void TestVideo(std::string url, std::string outUrl  ) {
     int videoWidth = video.GetWidth();
     int videoHeight = video.GetHeight();
 
-    // std::cout << videoWidth << " ------------" << videoHeight << std::endl;
+    // std::cout << videoWidth << " " << videoHeight << std::endl;
     if (videoWidth <= 0 || videoHeight <= 0) {
         std::cerr << "Invalid video dimensions." << std::endl;
         return;
@@ -126,14 +120,40 @@ void TestVideo(std::string url, std::string outUrl  ) {
 
 
 
+// int main(int argc, char* argv[]) {
+// 	gst_init(&argc, &argv);
+// 	std::string inputUrl(argv[1]);
+// 	std::string outputUrl(argv[2]);
+// 	std::cout << "read video:" << inputUrl << std::endl;
+// 	TestVideo(inputUrl, outputUrl);
+// 	return 0;
+// }
+
 int main(int argc, char* argv[]) {
-	gst_init(&argc, &argv);
-	std::string inputUrl(argv[1]);
-	std::string outputUrl(argv[2]);
-	std::cout << "read video:" << inputUrl << std::endl;
-	TestVideo(inputUrl, outputUrl);
-	return 0;
+    if (argc < 3) {
+        std::cerr << "Usage: " << argv[0] << " <inputUrl> <outputUrl>" << std::endl;
+        return -1;
+    }
+
+    gst_init(&argc, &argv);
+    std::string inputUrl(argv[1]);
+    std::string outputUrl(argv[2]);
+    std::cout << "read video: " << inputUrl << std::endl;
+
+    // Start measuring time
+    auto start = std::chrono::high_resolution_clock::now();
+
+    TestVideo(inputUrl, outputUrl);
+
+    // Stop measuring time and calculate the elapsed duration
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> elapsed = end - start;
+
+    std::cout << "TestVideo function took " << elapsed.count() << " milliseconds." << std::endl;
+
+    return 0;
 }
+
 
 
 // // to run: cmake .. && make 
