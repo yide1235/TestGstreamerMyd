@@ -2,8 +2,11 @@
 #include <fstream>
 #include <ostream>
 #include <iostream>
-#include <cuda_runtime.h>
+#include <stdexcept>
 #include <chrono>
+
+//external library
+#include <cuda_runtime.h>
 
 //link with other reader and writer
 #include "GstreamerReader.h"
@@ -21,7 +24,6 @@ float h_transformationMatrix_BT2020toBT709[TRANSFORMATION_MATRIX_SIZE] = {
     -0.124550f, 1.132900f, -0.008349f,
     -0.018151f, -0.100579f, 1.118730f
 };
-
 
 
 // CUDA kernel for color space conversion
@@ -48,6 +50,23 @@ __global__ void color_transformation_3x3(uchar3* src, uchar3* dst, int width, in
 }
 
 
+
+
+
+//CUDA checking code
+inline void checkCudaError(cudaError_t result, const char *file, int line) {
+    if (result != cudaSuccess) {
+        std::cerr << "CUDA Runtime Error: " << cudaGetErrorString(result) 
+                  << " at " << file << ":" << line << std::endl;
+        throw std::runtime_error("CUDA Runtime Error");
+    }
+}
+
+#define CHECK_CUDA_ERROR(val) checkCudaError((val), __FILE__, __LINE__)
+
+
+
+
 // a class do frame color conversion
 class CudaFrameConverter {
 
@@ -66,12 +85,12 @@ public:
         frameSize = width * height * COLOR_CHANNELS;
 
         //this is the setting for the convert objects, make sure they are load once
-        cudaMalloc(&d_src, frameSize);
-        cudaMalloc(&d_dst, frameSize);
+        CHECK_CUDA_ERROR(cudaMalloc(&d_src, frameSize));
+        CHECK_CUDA_ERROR(cudaMalloc(&d_dst, frameSize));
 
         //also load for the transformation matrix here
-        cudaMalloc(&d_transformationMatrix, TRANSFORMATION_MATRIX_SIZE * sizeof(float)); // Allocate memory for the 3x3 matrix
-        cudaMemcpy(d_transformationMatrix, h_transformationMatrix, TRANSFORMATION_MATRIX_SIZE * sizeof(float), cudaMemcpyHostToDevice); // Copy matrix to device
+        CHECK_CUDA_ERROR(cudaMalloc(&d_transformationMatrix, TRANSFORMATION_MATRIX_SIZE * sizeof(float)));
+        CHECK_CUDA_ERROR(cudaMemcpy(d_transformationMatrix, h_transformationMatrix, TRANSFORMATION_MATRIX_SIZE * sizeof(float), cudaMemcpyHostToDevice));
     
     }
 
@@ -87,14 +106,16 @@ public:
 
     void ConvertFrame(const std::vector<unsigned char>& inputFrame, std::vector<unsigned char>& outputFrame) {
         
-        cudaMemcpy(d_src, inputFrame.data(), frameSize, cudaMemcpyHostToDevice);
+        CHECK_CUDA_ERROR(cudaMemcpy(d_src, inputFrame.data(), frameSize, cudaMemcpyHostToDevice));
         // Perform color space conversion
 
         // Adjust gridSize and blockSize as necessary
         dim3 blockSize(BLOCK_SIZE, BLOCK_SIZE); 
         dim3 gridSize((frameWidth + blockSize.x - 1) / blockSize.x, (frameHeight + blockSize.y - 1) / blockSize.y);
         color_transformation_3x3<<<gridSize, blockSize>>>(d_src, d_dst, frameWidth, frameHeight, d_transformationMatrix);
-        cudaMemcpy(outputFrame.data(), d_dst, frameSize, cudaMemcpyDeviceToHost);
+        cudaDeviceSynchronize(); //check excutation
+        CHECK_CUDA_ERROR(cudaGetLastError()); // Check for any errors in kernel launch
+        CHECK_CUDA_ERROR(cudaMemcpy(outputFrame.data(), d_dst, frameSize, cudaMemcpyDeviceToHost));
     
     }
 
