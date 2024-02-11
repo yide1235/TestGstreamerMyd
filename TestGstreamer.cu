@@ -13,7 +13,7 @@
 #include "GstreamerWriter.h"
 
 
-//some settings:
+//settings variables for image processing part:
 const int COLOR_CHANNELS=3;
 const int BLOCK_SIZE=32;
 //define a 3x3 matrix now is a 1d array, so the length is 3*3, and to avoid passing length from gpu, use a global
@@ -30,8 +30,14 @@ __constant__ float COLOR_MIN = 0.0f;
 __constant__ float COLOR_MAX = 255.0f;
 
 
+
+
+
 // CUDA kernel for color space conversion
 __global__ void color_transformation_3x3(uchar3* src, uchar3* dst, int width, int height, const float* transformationMatrix) {
+    
+    if (!transformationMatrix) return;//check if pointer of transmation matrix is null
+    
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
 
@@ -39,18 +45,19 @@ __global__ void color_transformation_3x3(uchar3* src, uchar3* dst, int width, in
 
     int index = y * width + x;
 
-    float R2020 = src[index].x;
-    float G2020 = src[index].y;
-    float B2020 = src[index].z;
+    float R_src = src[index].x;
+    float G_src = src[index].y;
+    float B_src = src[index].z;
 
-    // Example conversion formulas
-    float R709 = R2020 * transformationMatrix[0] + G2020 * transformationMatrix[1] + B2020 * transformationMatrix[2];
-    float G709 = R2020 * transformationMatrix[3] + G2020 * transformationMatrix[4] + B2020 * transformationMatrix[5];
-    float B709 = R2020 * transformationMatrix[6] + G2020 * transformationMatrix[7] + B2020 * transformationMatrix[8];
+    //conversion formulas
+    float R_dst = R_src * transformationMatrix[0] + G_src * transformationMatrix[1] + B_src * transformationMatrix[2];
+    float G_dst = R_src * transformationMatrix[3] + G_src * transformationMatrix[4] + B_src * transformationMatrix[5];
+    float B_dst = R_src * transformationMatrix[6] + G_src * transformationMatrix[7] + B_src * transformationMatrix[8];
 
-    dst[index].x = fminf(fmaxf(R709, COLOR_MIN), COLOR_MAX);
-    dst[index].y = fminf(fmaxf(G709, COLOR_MIN), COLOR_MAX);
-    dst[index].z = fminf(fmaxf(B709, COLOR_MIN), COLOR_MAX);
+    dst[index].x = fminf(fmaxf(R_dst, COLOR_MIN), COLOR_MAX);
+    dst[index].y = fminf(fmaxf(G_dst, COLOR_MIN), COLOR_MAX);
+    dst[index].z = fminf(fmaxf(B_dst, COLOR_MIN), COLOR_MAX);
+
 }
 
 
@@ -207,20 +214,15 @@ void TestVideo(const std::string& inputUrl, const std::string& outUrl  ) {
 
 int main(int argc, char* argv[]) {
 
-    //check if number of parameter correct:
+    //check if number of parameter correct, requires the excutable, input, output
     if (argc < 3) {
         std::cerr << "Usage: " << argv[0] << " <inputUrl> <outputUrl>" << std::endl;
         return -1;
     }
 
-    //if it is correct
 	gst_init(&argc, &argv);
-
 	std::string inputUrl(argv[1]);
 	std::string outputUrl(argv[2]);
-	// std::cout << "read video:" << inputUrl << std::endl;
-	
-    //handling address check in TestVideo function
     TestVideo(inputUrl, outputUrl);
 	
     return 0;

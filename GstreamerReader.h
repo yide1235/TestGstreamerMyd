@@ -1,5 +1,5 @@
 //system library
-#pragma once
+#pragma once  //make sure not duplicate reference
 #include <string>
 #include <algorithm>
 #include <map>
@@ -13,30 +13,48 @@ class GstreamerReader {
 
 
 private:
-	// int NextFrame(AVFrame *frame);
-	int RecvDecodedFrame(std::vector<unsigned char>& dst, double& timestamp);
-	GstElement* pipeline_;
-	GstElement* source_;
-	GstElement* qtdemux_;
-	GstElement* queue_;
-	GstElement* h264parse_;
-	GstElement* omxh264dec_;
-	GstElement* sink_;
-	std::string srcFmt_;
-	int paddedWidth_ = 0;
-	int paddedHeight_ = 0;
-	int width_ = 0;
-	int height_ = 0;
-	std::pair<int, int> framerate_;
-	std::vector<unsigned char> framebuffer;
-	std::vector<unsigned char> bgrBuffer;
-	bool yuv420_to_rgb888(const std::vector<unsigned char>& yuv, int width, int height, std::vector<unsigned char>& rgb);
+    // Helper functions
+    int RecvDecodedFrame(std::vector<unsigned char>& dst, double& timestamp);
+    bool yuv420_to_rgb888(const std::vector<unsigned char>& yuv, int width, int height, std::vector<unsigned char>& rgb);
 
+    // GStreamer pipeline elements
+    GstElement* pipeline_ = nullptr;
+    GstElement* source_ = nullptr;
+    GstElement* qtdemux_ = nullptr;
+    GstElement* queue_ = nullptr;
+    GstElement* h264parse_ = nullptr;
+    GstElement* omxh264dec_ = nullptr;
+    GstElement* sink_ = nullptr;
 
+    // Video properties
+    std::string srcFmt_;
+    int paddedWidth_ = 0;
+    int paddedHeight_ = 0;
+    int width_ = 0;
+    int height_ = 0;
+    std::pair<int, int> framerate_;
+
+    // Buffers for video processing
+    std::vector<unsigned char> framebuffer;
+    std::vector<unsigned char> bgrBuffer;
 
 
 public:
 
+
+    // // Constructor
+    // GstreamerReader();
+
+    // // Destructor
+    // ~GstreamerReader();
+
+    // // Public interface
+    // int Open(const std::string& url);
+    // int Read(std::vector<unsigned char>& buffer, double& timestamp);
+    // std::pair<int, int> Framerate() const;
+    // void InputOriginSize(int width, int height);
+    // int GetWidth();
+    // int GetHeight();
 
 	/**
 	* @brief 

@@ -4,54 +4,85 @@
 //reference header
 #include "GstreamerReader.h"
 
+
+// YUV to RGB part:
+// YUV to RGB convert coefficients
+const float COEFF_R_V = 1.402f;
+const float COEFF_G_U = -0.344136f;
+const float COEFF_G_V = -0.714136f;
+const float COEFF_B_U = 1.772f;
+const float BIAS = 128.0f;
+const int COLOR_MIN_CPU = 0;
+const int COLOR_MAX_CPU = 255;
+const int COLOR_CHANNELS_CPU = 3; 
+
+
 bool GstreamerReader::yuv420_to_rgb888(const std::vector<unsigned char>& yuv, int width, int height, std::vector<unsigned char>& rgb) {
-	int uvSize = width * height / 4;
+    int uvSize = width * height / 4;
 
-	// Separate Y, U, and V components
-	const unsigned char* y = yuv.data();
-	const unsigned char* u = y + width * height;
-	const unsigned char* v = u + uvSize;
+    // Separate Y, U, and V components
+    const unsigned char* y = yuv.data();
+    const unsigned char* u = y + width * height;
+    const unsigned char* v = u + uvSize;
 
-	// Upsample U and V components to match Y component
-	/*std::vector<unsigned char> uUpsampled(width * height);
-	std::vector<unsigned char> vUpsampled(width * height);
+    rgb.resize(width * height * COLOR_CHANNELS_CPU); // make sure the rgb vector is big enough
 
-	for (int i = 0; i < height / 2; ++i) {
-		for (int j = 0; j < width / 2; ++j) {
-			uUpsampled[(i * 2 * width + j * 2)] = u[i * (width / 2) + j];
-			uUpsampled[(i * 2 * width + j * 2 + 1)] = u[i * (width / 2) + j];
-			uUpsampled[((i * 2 + 1) * width + j * 2)] = u[i * (width / 2) + j];
-			uUpsampled[((i * 2 + 1) * width + j * 2 + 1)] = u[i * (width / 2) + j];
-			vUpsampled[(i * 2 * width + j * 2)] = v[i * (width / 2) + j];
-			vUpsampled[(i * 2 * width + j * 2 + 1)] = v[i * (width / 2) + j];
-			vUpsampled[((i * 2 + 1) * width + j * 2)] = v[i * (width / 2) + j];
-			vUpsampled[((i * 2 + 1) * width + j * 2 + 1)] = v[i * (width / 2) + j];
+    // Color space conversion
+    for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j) {
+            int index = i * width + j;
+            int subIndex = i / 2 * width / 2 + j / 2;
+            int yValue = static_cast<int>(y[index]);
+            int uValue = static_cast<int>(u[subIndex]) - BIAS;
+            int vValue = static_cast<int>(v[subIndex]) - BIAS;
 
-		}
-	}*/
-
-	// Color space conversion
-	for (int i = 0; i < height; ++i) {
-		for (int j = 0; j < width; ++j) {
-			int index = i * width + j;
-			int subIndex = i / 2 * width / 2 + j / 2;
-			int yValue = static_cast<int>(y[index]);
-			int uValue = static_cast<int>(u[subIndex]);
-			int vValue = static_cast<int>(v[subIndex]);
-
-			// RGB conversion
-			/*rgb[3 * index] = yValue + 1.402 * (vValue - 128);
-			rgb[3 * index + 1] = yValue - 0.344136 * (uValue - 128) - 0.714136 * (vValue - 128);
-			rgb[3 * index + 2] = yValue + 1.772 * (uValue - 128);*/
-			rgb[3 * index + 2] = yValue + 1.402 * (vValue - 128);
-			rgb[3 * index + 1] = yValue - 0.344136 * (uValue - 128) - 0.714136 * (vValue - 128);
-			rgb[3 * index] = yValue + 1.772 * (uValue - 128);
-
-
-		}
-	}
-	return true;
+            // RGB conversion
+            rgb[3 * index + 2] = std::min(std::max(static_cast<int>(yValue + COEFF_R_V * vValue), COLOR_MIN_CPU), COLOR_MAX_CPU);
+            rgb[3 * index + 1] = std::min(std::max(static_cast<int>(yValue + COEFF_G_U * uValue + COEFF_G_V * vValue), COLOR_MIN_CPU), COLOR_MAX_CPU);
+            rgb[3 * index] = std::min(std::max(static_cast<int>(yValue + COEFF_B_U * uValue), COLOR_MIN_CPU), COLOR_MAX_CPU);
+        }
+    }
+    return true;
 }
+//end of YUV to RGB
+
+
+
+//definition of reader
+
+GstreamerReader::~GstreamerReader() {
+	if (pipeline_) {
+		gst_element_set_state(pipeline_, GST_STATE_NULL);
+		gst_object_unref(pipeline_);
+		pipeline_ = nullptr;
+	}
+}
+
+
+int GstreamerReader::GetWidth() {
+	std::cout << "Width: " << paddedWidth_  << std::endl;
+    return paddedWidth_; 
+}
+
+int GstreamerReader::GetHeight() {
+	std::cout << "Height: " << paddedHeight_  << std::endl;
+    return paddedHeight_;
+}
+
+
+int GstreamerReader::Read(std::vector<unsigned char>& frame, double& timestamp) {
+
+	return RecvDecodedFrame(frame, timestamp);
+}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -240,39 +271,5 @@ int GstreamerReader::Open(const std::string& url) {
 	return 0;
 }
 
-
-
-int GstreamerReader::Read(std::vector<unsigned char>& frame, double& timestamp) {
-	// //if need to record the frameCount.
-	// frameCount++; 
-
-	return RecvDecodedFrame(frame, timestamp);
-}
-
-
-
-GstreamerReader::~GstreamerReader() {
-	if (pipeline_) {
-		gst_element_set_state(pipeline_, GST_STATE_NULL);
-		gst_object_unref(pipeline_);
-		pipeline_ = nullptr;
-	}
-}
-
-
-int GstreamerReader::GetWidth() {
-	std::cout << "Width: " << paddedWidth_  << std::endl;
-    return paddedWidth_; 
-}
-
-int GstreamerReader::GetHeight() {
-	std::cout << "Height: " << paddedHeight_  << std::endl;
-    return paddedHeight_;
-}
-
-// //function for record frame
-// int GstreamerReader::GetFrameCount() const {
-//     return frameCount;
-// }
 
 
