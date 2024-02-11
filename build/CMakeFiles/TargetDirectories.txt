@@ -1,0 +1,3 @@
+/home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles/rebuild_cache.dir
+/home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles/edit_cache.dir
+/home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles/TestGstreamer.dir

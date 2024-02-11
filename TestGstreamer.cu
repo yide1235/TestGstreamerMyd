@@ -1,14 +1,16 @@
-﻿#include <fstream>
-#include "GstreamerReaderRAW.h"
+﻿//for library use
+#include <fstream>
 #include <ostream>
 #include <iostream>
-#include "VideoWriterRaw.h"
 #include <cuda_runtime.h>
 #include <chrono>
 
+//link with other reader and writer
+#include "GstreamerReaderRAW.h"
+#include "VideoWriterRaw.h"
 
 
-// CUDA kernel for color space conversion, defined outside the class
+// CUDA kernel for color space conversion
 __global__ void BT2020toBT709(uchar3* src, uchar3* dst, int width, int height) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
@@ -32,6 +34,7 @@ __global__ void BT2020toBT709(uchar3* src, uchar3* dst, int width, int height) {
 }
 
 
+// a class do frame color conversion
 class CudaFrameConverter {
 
 private:
@@ -39,12 +42,12 @@ private:
     uchar3* d_dst = nullptr;
     int frameWidth, frameHeight;
     size_t frameSize;
-    // Define gridSize and blockSize based on frameWidth and frameHeight
 
 
 public:
+    //assigning cuda memory when this object is called, then there are no copy memory used
     CudaFrameConverter(int width, int height) : frameWidth(width), frameHeight(height) {
-        frameSize = width * height * 3; // Assuming 3 channels (RGB)
+        frameSize = width * height * 3;
         cudaMalloc(&d_src, frameSize);
         cudaMalloc(&d_dst, frameSize);
     }
@@ -131,6 +134,7 @@ int main(int argc, char* argv[]) {
 }
 
 
+
 // // main function code for testing inference time
 // int main(int argc, char* argv[]) {
 //     if (argc < 3) {
@@ -156,8 +160,3 @@ int main(int argc, char* argv[]) {
 
 //     return 0;
 // }
-
-
-
-
-// //nvcc TestGstreamer.cu GstreamerReaderRAW.cpp VideoWriterRaw.cpp -I/usr/local/include/opencv4 -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -L/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Xlinker -rpath -Xlinker /usr/local/lib -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0 -o TestGstreamer && ./TestGstreamer ./1.mp4 ./1_output.mp4
