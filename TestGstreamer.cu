@@ -72,35 +72,35 @@ public:
 
 
 
-void TestVideo(std::string inputUrl, std::string outUrl  ) {
-    std::cout << "video:" << inputUrl << std::endl;
-    GstreamerReader video;
+void TestVideo(std::string url, std::string outUrl  ) {
+    std::cout << "video:" << url << std::endl;
+    GstreamerReader reader;
 
-    auto ret = video.Open(inputUrl);
+    auto ret = reader.Open(url);
     if (ret < 0) {
-        std::cerr << "Failed to open video: " << inputUrl << std::endl;
+        std::cerr << "Failed to open video: " << url << std::endl;
         return;
     }
 
     // //get the width and height of the video after opened the video
-    int videoWidth = video.GetWidth();
-    int videoHeight = video.GetHeight();
+    int videoWidth = reader.GetWidth();
+    int videoHeight = reader.GetHeight();
 
-    // //code to check if the height and width are valid number
+    // //code to check if the height and width are valid
     if (videoWidth <= 0 || videoHeight <= 0) {
         std::cerr << "Invalid video dimensions." << std::endl;
         return;
     }
 
 
-    video.InputOriginSize(videoWidth, videoHeight);
-    ret = video.Open(inputUrl);
+    reader.InputOriginSize(videoWidth, videoHeight);
+    ret = reader.Open(url);
     if (ret < 0) return;
 
     GstreamerWriter writer;
 
     writer.SetSize(videoWidth, videoHeight);
-    writer.SetFramerate(video.Framerate());
+    writer.SetFramerate(reader.Framerate());
     ret = writer.Open(outUrl);
     if (ret < 0) return;
 
@@ -112,7 +112,7 @@ void TestVideo(std::string inputUrl, std::string outUrl  ) {
     double timestamp = .0;
 
     while (true) {
-        auto ret = video.Read(temp, timestamp);
+        auto ret = reader.Read(temp, timestamp);
         if (ret < 0) break;
 
         converter.ConvertFrame(temp, convertedTemp);
