@@ -236,6 +236,8 @@ int VideoReaderRaw::Open(const std::string& url) {
 
 
 int VideoReaderRaw::Read(std::vector<unsigned char>& frame, double& timestamp) {
+	frameCount++; 
+
 	return RecvDecodedFrame(frame, timestamp);
 }
 
@@ -259,5 +261,10 @@ int VideoReaderRaw::GetHeight() {
 	std::cout << "Height: " << paddedHeight_  << std::endl;
     return paddedHeight_;
 }
+
+
+// int VideoReaderRaw::GetFrameCount() const {
+//     return frameCount;
+// }
 
 

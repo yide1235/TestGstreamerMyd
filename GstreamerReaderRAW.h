@@ -33,11 +33,16 @@ public:
 		height_ = height;
 	}
 	~VideoReaderRaw();
-	
+
 	
 	int GetHeight();
 
 	int GetWidth();
+
+
+	// int GetFrameCount() const;
+
+
 	
 private:
 	// int NextFrame(AVFrame *frame);

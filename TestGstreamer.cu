@@ -75,7 +75,7 @@ public:
 };
 
 
-void TestVideo(std::string url, std::string outUrl, int count) {
+void TestVideo(std::string url, std::string outUrl,  ) {
     std::cout << "video:" << url << std::endl;
     VideoReaderRaw video;
 
@@ -88,7 +88,7 @@ void TestVideo(std::string url, std::string outUrl, int count) {
     int videoWidth = video.GetWidth();
     int videoHeight = video.GetHeight();
 
-    std::cout << videoWidth << " ------------" << videoHeight << std::endl;
+    // std::cout << videoWidth << " ------------" << videoHeight << std::endl;
     if (videoWidth <= 0 || videoHeight <= 0) {
         std::cerr << "Invalid video dimensions." << std::endl;
         return;
@@ -107,11 +107,12 @@ void TestVideo(std::string url, std::string outUrl, int count) {
 
     CudaFrameConverter converter(videoWidth, videoHeight);
 
-    int seq = 0;
+    // int seq = 0;
+
     std::vector<unsigned char> temp, convertedTemp(videoWidth* videoHeight * 3); // Assuming frame size is 1920x1080 and 3 channels (RGB)
     double timestamp = .0;
 
-    while (seq++ < count) {
+    while (true) {
         auto ret = video.Read(temp, timestamp);
         if (ret < 0) break;
 
@@ -130,7 +131,7 @@ int main(int argc, char* argv[]) {
 	std::string inputUrl(argv[1]);
 	std::string outputUrl(argv[2]);
 	std::cout << "read video:" << inputUrl << std::endl;
-	TestVideo(inputUrl, outputUrl, 400);
+	TestVideo(inputUrl, outputUrl);
 	return 0;
 }
 
@@ -139,4 +140,4 @@ int main(int argc, char* argv[]) {
 // // && cd .. && ./TestGstreamer ./1.mp4 ./output.mp4 && cd build
 
 
-// //nvcc TestGstreamer.cu GstreamerReaderRAW.cpp VideoWriterRaw.cpp -I/usr/local/include/opencv4 -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -L/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Xlinker -rpath -Xlinker /usr/local/lib -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0 -o TestGstreamer && ./TestGstreamer ./input.mp4 ./output.mp4
+// //nvcc TestGstreamer.cu GstreamerReaderRAW.cpp VideoWriterRaw.cpp -I/usr/local/include/opencv4 -I/usr/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -L/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Xlinker -rpath -Xlinker /usr/local/lib -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0 -o TestGstreamer && ./TestGstreamer ./1.mp4 ./1_output.mp4
