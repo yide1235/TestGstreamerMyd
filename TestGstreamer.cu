@@ -13,9 +13,10 @@
 //some settings:
 const int COLOR_CHANNELS=3;
 const int BLOCK_SIZE=32;
-
+//define a 3x3 matrix now is a 1d array, so the length is 3*3, and to avoid passing length from gpu, use a global
+const int TRANSFORMATION_MATRIX_SIZE = 3 * 3;
 //the 3x3 transmation matrix now is saved to be 1d array for better efficient in CUDA
-float h_transformationMatrix_BT2020toBT709[9] = {
+float h_transformationMatrix_BT2020toBT709[TRANSFORMATION_MATRIX_SIZE] = {
     1.660491f, -0.587641f, -0.072850f,
     -0.124550f, 1.132900f, -0.008349f,
     -0.018151f, -0.100579f, 1.118730f
@@ -69,13 +70,12 @@ public:
         cudaMalloc(&d_dst, frameSize);
 
         //also load for the transformation matrix here
-        cudaMalloc(&d_transformationMatrix, 9 * sizeof(float)); // Allocate memory for the 3x3 matrix
-        cudaMemcpy(d_transformationMatrix, h_transformationMatrix, 9 * sizeof(float), cudaMemcpyHostToDevice); // Copy matrix to device
+        cudaMalloc(&d_transformationMatrix, TRANSFORMATION_MATRIX_SIZE * sizeof(float)); // Allocate memory for the 3x3 matrix
+        cudaMemcpy(d_transformationMatrix, h_transformationMatrix, TRANSFORMATION_MATRIX_SIZE * sizeof(float), cudaMemcpyHostToDevice); // Copy matrix to device
     
-
     }
 
-
+    //for destructor clean the memory
     ~CudaFrameConverter() {
         cudaFree(d_src);
         cudaFree(d_dst);
