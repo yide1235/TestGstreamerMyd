@@ -72,20 +72,21 @@ public:
 
 
 
-void TestVideo(std::string url, std::string outUrl  ) {
-    std::cout << "video:" << url << std::endl;
+void TestVideo(std::string inputUrl, std::string outUrl  ) {
+    std::cout << "video:" << inputUrl << std::endl;
     GstreamerReader video;
 
-    auto ret = video.Open(url);
+    auto ret = video.Open(inputUrl);
     if (ret < 0) {
-        std::cerr << "Failed to open video: " << url << std::endl;
+        std::cerr << "Failed to open video: " << inputUrl << std::endl;
         return;
     }
 
+    // //get the width and height of the video after opened the video
     int videoWidth = video.GetWidth();
     int videoHeight = video.GetHeight();
 
-    // std::cout << videoWidth << " " << videoHeight << std::endl;
+    // //code to check if the height and width are valid number
     if (videoWidth <= 0 || videoHeight <= 0) {
         std::cerr << "Invalid video dimensions." << std::endl;
         return;
@@ -93,11 +94,11 @@ void TestVideo(std::string url, std::string outUrl  ) {
 
 
     video.InputOriginSize(videoWidth, videoHeight);
-    ret = video.Open(url);
+    ret = video.Open(inputUrl);
     if (ret < 0) return;
 
     GstreamerWriter writer;
-    
+
     writer.SetSize(videoWidth, videoHeight);
     writer.SetFramerate(video.Framerate());
     ret = writer.Open(outUrl);
@@ -126,38 +127,22 @@ void TestVideo(std::string url, std::string outUrl  ) {
 
 
 int main(int argc, char* argv[]) {
+
+    //check if number of parameter correct:
+    if (argc < 3) {
+        std::cerr << "Usage: " << argv[0] << " <inputUrl> <outputUrl>" << std::endl;
+        return -1;
+    }
+
+    //if it is correct
 	gst_init(&argc, &argv);
 	std::string inputUrl(argv[1]);
 	std::string outputUrl(argv[2]);
 	std::cout << "read video:" << inputUrl << std::endl;
-	TestVideo(inputUrl, outputUrl);
-	return 0;
+	
+    
+    TestVideo(inputUrl, outputUrl);
+	
+    return 0;
 }
 
-
-
-// // main function code for testing inference time
-// int main(int argc, char* argv[]) {
-//     if (argc < 3) {
-//         std::cerr << "Usage: " << argv[0] << " <inputUrl> <outputUrl>" << std::endl;
-//         return -1;
-//     }
-
-//     gst_init(&argc, &argv);
-//     std::string inputUrl(argv[1]);
-//     std::string outputUrl(argv[2]);
-//     std::cout << "read video: " << inputUrl << std::endl;
-
-//     // Start measuring time
-//     auto start = std::chrono::high_resolution_clock::now();
-
-//     TestVideo(inputUrl, outputUrl);
-
-//     // Stop measuring time and calculate the elapsed duration
-//     auto end = std::chrono::high_resolution_clock::now();
-//     std::chrono::duration<double, std::milli> elapsed = end - start;
-
-//     std::cout << "TestVideo function took " << elapsed.count() << " milliseconds." << std::endl;
-
-//     return 0;
-// }
