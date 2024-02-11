@@ -40,5 +40,3 @@ target_link_libraries(${PROJECT_NAME}
 # RPATH settings for finding shared libraries at runtime
 set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH "/usr/local/lib;/usr/lib/x86_64-linux-gnu")
 set_target_properties(${PROJECT_NAME} PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
-
-
