@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.o"
+  "CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.o"
+  "CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.o"
   "CMakeFiles/TestGstreamer.dir/TestGstreamer_generated_TestGstreamer.cu.o"
-  "CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.o"
   "TestGstreamer"
   "TestGstreamer.pdb"
 )

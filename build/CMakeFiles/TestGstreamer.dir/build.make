@@ -64,43 +64,43 @@ CMakeFiles/TestGstreamer.dir/TestGstreamer_generated_TestGstreamer.cu.o: ../Test
 	cd /home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles/TestGstreamer.dir && /usr/bin/cmake -E make_directory /home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles/TestGstreamer.dir//.
 	cd /home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles/TestGstreamer.dir && /usr/bin/cmake -D verbose:BOOL=$(VERBOSE) -D build_configuration:STRING= -D generated_file:STRING=/home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles/TestGstreamer.dir//./TestGstreamer_generated_TestGstreamer.cu.o -D generated_cubin_file:STRING=/home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles/TestGstreamer.dir//./TestGstreamer_generated_TestGstreamer.cu.o.cubin.txt -P /home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles/TestGstreamer.dir//TestGstreamer_generated_TestGstreamer.cu.o.cmake
 
-CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.o: CMakeFiles/TestGstreamer.dir/flags.make
-CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.o: ../GstreamerReaderRAW.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.o -c /home/myd/Desktop/TestGstreamerMyd/GstreamerReaderRAW.cpp
+CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.o: CMakeFiles/TestGstreamer.dir/flags.make
+CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.o: ../GstreamerReader.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.o -c /home/myd/Desktop/TestGstreamerMyd/GstreamerReader.cpp
 
-CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/myd/Desktop/TestGstreamerMyd/GstreamerReaderRAW.cpp > CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.i
+CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/myd/Desktop/TestGstreamerMyd/GstreamerReader.cpp > CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.i
 
-CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/myd/Desktop/TestGstreamerMyd/GstreamerReaderRAW.cpp -o CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.s
+CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/myd/Desktop/TestGstreamerMyd/GstreamerReader.cpp -o CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.s
 
-CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.o: CMakeFiles/TestGstreamer.dir/flags.make
-CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.o: ../VideoWriterRaw.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.o -c /home/myd/Desktop/TestGstreamerMyd/VideoWriterRaw.cpp
+CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.o: CMakeFiles/TestGstreamer.dir/flags.make
+CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.o: ../GstreamerWriter.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.o -c /home/myd/Desktop/TestGstreamerMyd/GstreamerWriter.cpp
 
-CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/myd/Desktop/TestGstreamerMyd/VideoWriterRaw.cpp > CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.i
+CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/myd/Desktop/TestGstreamerMyd/GstreamerWriter.cpp > CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.i
 
-CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/myd/Desktop/TestGstreamerMyd/VideoWriterRaw.cpp -o CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.s
+CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/myd/Desktop/TestGstreamerMyd/GstreamerWriter.cpp -o CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.s
 
 # Object files for target TestGstreamer
 TestGstreamer_OBJECTS = \
-"CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.o" \
-"CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.o"
+"CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.o" \
+"CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.o"
 
 # External object files for target TestGstreamer
 TestGstreamer_EXTERNAL_OBJECTS = \
 "/home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles/TestGstreamer.dir/TestGstreamer_generated_TestGstreamer.cu.o"
 
-TestGstreamer: CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.o
-TestGstreamer: CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.o
+TestGstreamer: CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.o
+TestGstreamer: CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.o
 TestGstreamer: CMakeFiles/TestGstreamer.dir/TestGstreamer_generated_TestGstreamer.cu.o
 TestGstreamer: CMakeFiles/TestGstreamer.dir/build.make
 TestGstreamer: /usr/local/cuda-11.7/lib64/libcudart_static.a

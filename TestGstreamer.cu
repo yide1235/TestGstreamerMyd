@@ -6,8 +6,8 @@
 #include <chrono>
 
 //link with other reader and writer
-#include "GstreamerReaderRAW.h"
-#include "VideoWriterRaw.h"
+#include "GstreamerReader.h"
+#include "GstreamerWriter.h"
 
 
 // CUDA kernel for color space conversion
@@ -74,7 +74,7 @@ public:
 
 void TestVideo(std::string url, std::string outUrl  ) {
     std::cout << "video:" << url << std::endl;
-    VideoReaderRaw video;
+    GstreamerReader video;
 
     auto ret = video.Open(url);
     if (ret < 0) {
@@ -96,7 +96,8 @@ void TestVideo(std::string url, std::string outUrl  ) {
     ret = video.Open(url);
     if (ret < 0) return;
 
-    VideoWriterRaw writer;
+    GstreamerWriter writer;
+    
     writer.SetSize(videoWidth, videoHeight);
     writer.SetFramerate(video.Framerate());
     ret = writer.Open(outUrl);

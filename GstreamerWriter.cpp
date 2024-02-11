@@ -1,14 +1,16 @@
-#include "VideoWriterRaw.h"
+//system libary
 #include <ostream>
 #include <iostream>
 
-//new
+//externel library
 #include <gst/gst.h>
 
+//reference header
+#include "GstreamerWriter.h"
 
 
 
-VideoWriterRaw::~VideoWriterRaw() {
+GstreamerWriter::~GstreamerWriter() {
     if (appSrc_) {
         GstFlowReturn retflow;
         g_signal_emit_by_name(appSrc_, "end-of-stream", &retflow);
@@ -27,7 +29,7 @@ VideoWriterRaw::~VideoWriterRaw() {
 }
 
 
-int VideoWriterRaw::Open(const std::string url) {
+int GstreamerWriter::Open(const std::string url) {
     appSrc_ = gst_element_factory_make("appsrc", "AppSrc");
     queue_ = gst_element_factory_make("queue", "QueueWrite");
     videoConvert_ = gst_element_factory_make("videoconvert", "Videoconvert");
@@ -132,7 +134,7 @@ int VideoWriterRaw::Open(const std::string url) {
 }
 
 
-int VideoWriterRaw::PushData2Pipeline(const std::vector<unsigned char>& frame, double timestamp) {
+int GstreamerWriter::PushData2Pipeline(const std::vector<unsigned char>& frame, double timestamp) {
     GstBuffer* buffer;
     GstFlowReturn ret;
     GstMapInfo map;
@@ -171,6 +173,6 @@ int VideoWriterRaw::PushData2Pipeline(const std::vector<unsigned char>& frame, d
 }
 
 
-int VideoWriterRaw::Write(const std::vector<unsigned char>& frame, double timestamp) {
+int GstreamerWriter::Write(const std::vector<unsigned char>& frame, double timestamp) {
     return PushData2Pipeline(frame, timestamp);
 }

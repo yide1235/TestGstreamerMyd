@@ -1,8 +1,10 @@
-#include "GstreamerReaderRAW.h"
+//system library
 #include <iostream>
 
+//reference header
+#include "GstreamerReader.h"
 
-bool VideoReaderRaw::yuv420_to_rgb888(const std::vector<unsigned char>& yuv, int width, int height, std::vector<unsigned char>& rgb) {
+bool GstreamerReader::yuv420_to_rgb888(const std::vector<unsigned char>& yuv, int width, int height, std::vector<unsigned char>& rgb) {
 	int uvSize = width * height / 4;
 
 	// Separate Y, U, and V components
@@ -93,7 +95,7 @@ static inline void ErrHandle(GstElement* pipeline) {
 
 
 
-int VideoReaderRaw::RecvDecodedFrame(std::vector<unsigned char>& frame, double& timestamp) {
+int GstreamerReader::RecvDecodedFrame(std::vector<unsigned char>& frame, double& timestamp) {
 	GstSample* sample;
 
 	g_signal_emit_by_name(sink_, "pull-sample", &sample);
@@ -161,7 +163,7 @@ int VideoReaderRaw::RecvDecodedFrame(std::vector<unsigned char>& frame, double& 
 }
 
 
-int VideoReaderRaw::Open(const std::string& url) {
+int GstreamerReader::Open(const std::string& url) {
 	// create the elements
 
 	//
@@ -240,7 +242,7 @@ int VideoReaderRaw::Open(const std::string& url) {
 
 
 
-int VideoReaderRaw::Read(std::vector<unsigned char>& frame, double& timestamp) {
+int GstreamerReader::Read(std::vector<unsigned char>& frame, double& timestamp) {
 	// //if need to record the frameCount.
 	// frameCount++; 
 
@@ -249,7 +251,7 @@ int VideoReaderRaw::Read(std::vector<unsigned char>& frame, double& timestamp) {
 
 
 
-VideoReaderRaw::~VideoReaderRaw() {
+GstreamerReader::~GstreamerReader() {
 	if (pipeline_) {
 		gst_element_set_state(pipeline_, GST_STATE_NULL);
 		gst_object_unref(pipeline_);
@@ -258,18 +260,18 @@ VideoReaderRaw::~VideoReaderRaw() {
 }
 
 
-int VideoReaderRaw::GetWidth() {
+int GstreamerReader::GetWidth() {
 	std::cout << "Width: " << paddedWidth_  << std::endl;
     return paddedWidth_; 
 }
 
-int VideoReaderRaw::GetHeight() {
+int GstreamerReader::GetHeight() {
 	std::cout << "Height: " << paddedHeight_  << std::endl;
     return paddedHeight_;
 }
 
 // //function for record frame
-// int VideoReaderRaw::GetFrameCount() const {
+// int GstreamerReader::GetFrameCount() const {
 //     return frameCount;
 // }
 

@@ -123,59 +123,59 @@ TestGstreamer/fast:
 	$(MAKE) -f CMakeFiles/TestGstreamer.dir/build.make CMakeFiles/TestGstreamer.dir/build
 .PHONY : TestGstreamer/fast
 
-GstreamerReaderRAW.o: GstreamerReaderRAW.cpp.o
+GstreamerReader.o: GstreamerReader.cpp.o
 
-.PHONY : GstreamerReaderRAW.o
-
-# target to build an object file
-GstreamerReaderRAW.cpp.o:
-	$(MAKE) -f CMakeFiles/TestGstreamer.dir/build.make CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.o
-.PHONY : GstreamerReaderRAW.cpp.o
-
-GstreamerReaderRAW.i: GstreamerReaderRAW.cpp.i
-
-.PHONY : GstreamerReaderRAW.i
-
-# target to preprocess a source file
-GstreamerReaderRAW.cpp.i:
-	$(MAKE) -f CMakeFiles/TestGstreamer.dir/build.make CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.i
-.PHONY : GstreamerReaderRAW.cpp.i
-
-GstreamerReaderRAW.s: GstreamerReaderRAW.cpp.s
-
-.PHONY : GstreamerReaderRAW.s
-
-# target to generate assembly for a file
-GstreamerReaderRAW.cpp.s:
-	$(MAKE) -f CMakeFiles/TestGstreamer.dir/build.make CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.s
-.PHONY : GstreamerReaderRAW.cpp.s
-
-VideoWriterRaw.o: VideoWriterRaw.cpp.o
-
-.PHONY : VideoWriterRaw.o
+.PHONY : GstreamerReader.o
 
 # target to build an object file
-VideoWriterRaw.cpp.o:
-	$(MAKE) -f CMakeFiles/TestGstreamer.dir/build.make CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.o
-.PHONY : VideoWriterRaw.cpp.o
+GstreamerReader.cpp.o:
+	$(MAKE) -f CMakeFiles/TestGstreamer.dir/build.make CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.o
+.PHONY : GstreamerReader.cpp.o
 
-VideoWriterRaw.i: VideoWriterRaw.cpp.i
+GstreamerReader.i: GstreamerReader.cpp.i
 
-.PHONY : VideoWriterRaw.i
+.PHONY : GstreamerReader.i
 
 # target to preprocess a source file
-VideoWriterRaw.cpp.i:
-	$(MAKE) -f CMakeFiles/TestGstreamer.dir/build.make CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.i
-.PHONY : VideoWriterRaw.cpp.i
+GstreamerReader.cpp.i:
+	$(MAKE) -f CMakeFiles/TestGstreamer.dir/build.make CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.i
+.PHONY : GstreamerReader.cpp.i
 
-VideoWriterRaw.s: VideoWriterRaw.cpp.s
+GstreamerReader.s: GstreamerReader.cpp.s
 
-.PHONY : VideoWriterRaw.s
+.PHONY : GstreamerReader.s
 
 # target to generate assembly for a file
-VideoWriterRaw.cpp.s:
-	$(MAKE) -f CMakeFiles/TestGstreamer.dir/build.make CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.s
-.PHONY : VideoWriterRaw.cpp.s
+GstreamerReader.cpp.s:
+	$(MAKE) -f CMakeFiles/TestGstreamer.dir/build.make CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.s
+.PHONY : GstreamerReader.cpp.s
+
+GstreamerWriter.o: GstreamerWriter.cpp.o
+
+.PHONY : GstreamerWriter.o
+
+# target to build an object file
+GstreamerWriter.cpp.o:
+	$(MAKE) -f CMakeFiles/TestGstreamer.dir/build.make CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.o
+.PHONY : GstreamerWriter.cpp.o
+
+GstreamerWriter.i: GstreamerWriter.cpp.i
+
+.PHONY : GstreamerWriter.i
+
+# target to preprocess a source file
+GstreamerWriter.cpp.i:
+	$(MAKE) -f CMakeFiles/TestGstreamer.dir/build.make CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.i
+.PHONY : GstreamerWriter.cpp.i
+
+GstreamerWriter.s: GstreamerWriter.cpp.s
+
+.PHONY : GstreamerWriter.s
+
+# target to generate assembly for a file
+GstreamerWriter.cpp.s:
+	$(MAKE) -f CMakeFiles/TestGstreamer.dir/build.make CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.s
+.PHONY : GstreamerWriter.cpp.s
 
 # Help Target
 help:
@@ -186,12 +186,12 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... TestGstreamer"
-	@echo "... GstreamerReaderRAW.o"
-	@echo "... GstreamerReaderRAW.i"
-	@echo "... GstreamerReaderRAW.s"
-	@echo "... VideoWriterRaw.o"
-	@echo "... VideoWriterRaw.i"
-	@echo "... VideoWriterRaw.s"
+	@echo "... GstreamerReader.o"
+	@echo "... GstreamerReader.i"
+	@echo "... GstreamerReader.s"
+	@echo "... GstreamerWriter.o"
+	@echo "... GstreamerWriter.i"
+	@echo "... GstreamerWriter.s"
 .PHONY : help
 
 

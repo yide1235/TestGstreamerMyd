@@ -19,7 +19,7 @@ include_directories(
 
 # Set CUDA sources and C++ sources
 set(CUDA_SOURCES TestGstreamer.cu)
-set(CPP_SOURCES GstreamerReaderRAW.cpp VideoWriterRaw.cpp)
+set(CPP_SOURCES GstreamerReader.cpp GstreamerWriter.cpp)
 
 # Specify target executable and source files
 cuda_add_executable(${PROJECT_NAME} ${CUDA_SOURCES} ${CPP_SOURCES})

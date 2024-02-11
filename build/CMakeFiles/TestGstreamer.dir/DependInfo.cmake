@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/myd/Desktop/TestGstreamerMyd/GstreamerReaderRAW.cpp" "/home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles/TestGstreamer.dir/GstreamerReaderRAW.cpp.o"
-  "/home/myd/Desktop/TestGstreamerMyd/VideoWriterRaw.cpp" "/home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles/TestGstreamer.dir/VideoWriterRaw.cpp.o"
+  "/home/myd/Desktop/TestGstreamerMyd/GstreamerReader.cpp" "/home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles/TestGstreamer.dir/GstreamerReader.cpp.o"
+  "/home/myd/Desktop/TestGstreamerMyd/GstreamerWriter.cpp" "/home/myd/Desktop/TestGstreamerMyd/build/CMakeFiles/TestGstreamer.dir/GstreamerWriter.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
