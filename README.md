@@ -1,6 +1,8 @@
 # TestGstreamerMyd
 
-//if rerun:
+
+
+//if rerun, make sure gst, cuda is installed:
 
   //delete content under build
   
