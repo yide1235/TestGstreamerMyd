@@ -25,6 +25,10 @@ float h_transformationMatrix_BT2020toBT709[TRANSFORMATION_MATRIX_SIZE] = {
     -0.018151f, -0.100579f, 1.118730f
 };
 
+// Constants for color channel limits
+__constant__ float COLOR_MIN = 0.0f;
+__constant__ float COLOR_MAX = 255.0f;
+
 
 // CUDA kernel for color space conversion
 __global__ void color_transformation_3x3(uchar3* src, uchar3* dst, int width, int height, const float* transformationMatrix) {
@@ -44,9 +48,9 @@ __global__ void color_transformation_3x3(uchar3* src, uchar3* dst, int width, in
     float G709 = R2020 * transformationMatrix[3] + G2020 * transformationMatrix[4] + B2020 * transformationMatrix[5];
     float B709 = R2020 * transformationMatrix[6] + G2020 * transformationMatrix[7] + B2020 * transformationMatrix[8];
 
-    dst[index].x = fminf(fmaxf(R709, 0.0f), 255.0f);
-    dst[index].y = fminf(fmaxf(G709, 0.0f), 255.0f);
-    dst[index].z = fminf(fmaxf(B709, 0.0f), 255.0f);
+    dst[index].x = fminf(fmaxf(R709, COLOR_MIN), COLOR_MAX);
+    dst[index].y = fminf(fmaxf(G709, COLOR_MIN), COLOR_MAX);
+    dst[index].z = fminf(fmaxf(B709, COLOR_MIN), COLOR_MAX);
 }
 
 
@@ -112,6 +116,13 @@ public:
         // Adjust gridSize and blockSize as necessary
         dim3 blockSize(BLOCK_SIZE, BLOCK_SIZE); 
         dim3 gridSize((frameWidth + blockSize.x - 1) / blockSize.x, (frameHeight + blockSize.y - 1) / blockSize.y);
+    
+        // Ensuring the grid covers the entire image
+        if (gridSize.x * blockSize.x < frameWidth || gridSize.y * blockSize.y < frameHeight) {
+            std::cerr << "Error: Grid size is insufficient to cover the entire image." << std::endl;
+            throw std::runtime_error("Grid size insufficient for image dimensions.");
+        }
+
         color_transformation_3x3<<<gridSize, blockSize>>>(d_src, d_dst, frameWidth, frameHeight, d_transformationMatrix);
         cudaDeviceSynchronize(); //check excutation
         CHECK_CUDA_ERROR(cudaGetLastError()); // Check for any errors in kernel launch

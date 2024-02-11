@@ -8,9 +8,7 @@
 
     cmake ..
     
-    make
-    
-    ./TestGstreamer ./input_video/1.mp4 ./output_video/1_output.mp4
+    make && ./TestGstreamer ./input_video/1.mp4 ./output_video/1_output.mp4
 
 
     //if the make have some error, you can also try this command
