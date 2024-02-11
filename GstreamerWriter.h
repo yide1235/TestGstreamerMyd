@@ -30,40 +30,28 @@ private:
 
 
 public:
+
     ~GstreamerWriter();
-    /**
-     * @brief 
-     */
+
     int Open(const std::string url);
 
-    /**
-     * @brief 
-     * @param fps = framerate.first/framerate.second
-     */
+
     void SetFramerate(std::pair<int, int> framerate) {
         framerate_ = framerate;
     }
 
-    /**
-     * @brief 
-     */
+ 
     void SetSize(int width, int height) {
         width_ = width;
         height_ = height;
     }
 
-    /**
-     * @brief 
-     * @param bitrate bit/sec
-     */
+
     void SetBitrate(int bitrate) {
         bitrate_ = bitrate;
     }
 
-    /**
-     * @brief
-     * @param timestamp
-     */
+
     int Write(const std::vector<unsigned char>& frame, double timestamp);
 
 

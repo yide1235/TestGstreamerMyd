@@ -42,43 +42,21 @@ private:
 public:
 
 
-    // // Constructor
-    // GstreamerReader();
 
-    // // Destructor
-    // ~GstreamerReader();
-
-    // // Public interface
-    // int Open(const std::string& url);
-    // int Read(std::vector<unsigned char>& buffer, double& timestamp);
-    // std::pair<int, int> Framerate() const;
-    // void InputOriginSize(int width, int height);
-    // int GetWidth();
-    // int GetHeight();
-
-	/**
-	* @brief 
-	*/
 	int Open(const std::string& url);
-	/**
-	*
-	*/
+
 	int Read(std::vector<unsigned char>& buffer, double& timestamp);
-	/**
-	* @brief 
-	* @param fps = framerate.first/framerate.second
-	*/
+
 	std::pair<int, int> Framerate() {
 		return framerate_;
 	}
 
-	/**
-	 * @brief 
-	 */
+
 	void InputOriginSize(const int width, const int height) {
 		width_ = width;
 		height_ = height;
 	}
+
 	~GstreamerReader();
 
 	
@@ -86,10 +64,5 @@ public:
 
 	int GetWidth();
 
-
-	// int GetFrameCount() const;
-
-
-	
 
 };
