@@ -6,24 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/myd/Desktop/TestGstreamerMyd/GstreamerReaderRAW.cpp
-GstreamerReaderRAW.h
-/home/myd/Desktop/TestGstreamerMyd/GstreamerReaderRAW.h
-iostream
--
-
-/home/myd/Desktop/TestGstreamerMyd/GstreamerReaderRAW.h
-string
--
-algorithm
--
-map
--
-gst/gst.h
--
-vector
--
-
 /home/myd/Desktop/TestGstreamerMyd/VideoWriterRaw.cpp
 VideoWriterRaw.h
 /home/myd/Desktop/TestGstreamerMyd/VideoWriterRaw.h

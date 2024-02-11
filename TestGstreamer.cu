@@ -75,7 +75,7 @@ public:
 };
 
 
-void TestVideo(std::string url, std::string outUrl,  ) {
+void TestVideo(std::string url, std::string outUrl  ) {
     std::cout << "video:" << url << std::endl;
     VideoReaderRaw video;
 

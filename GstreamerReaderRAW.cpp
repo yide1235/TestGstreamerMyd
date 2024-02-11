@@ -236,7 +236,7 @@ int VideoReaderRaw::Open(const std::string& url) {
 
 
 int VideoReaderRaw::Read(std::vector<unsigned char>& frame, double& timestamp) {
-	frameCount++; 
+	// frameCount++; 
 
 	return RecvDecodedFrame(frame, timestamp);
 }
