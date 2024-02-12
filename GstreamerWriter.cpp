@@ -8,17 +8,6 @@
 // reference header
 #include "GstreamerWriter.h"
 
-//constant for the writer
-const guint64 SLEEP_TIME_MICROSECONDS = 4000000; 
-//constant for the encoder_ bitrate
-const int BITRATE = 500000;
-const int REF = 4;
-const int PASS = 4;
-const int KEY_INT_MAX = 0;
-const gboolean BYTE_STREAM = TRUE;
-const guint TUNE = 0x00000004;
-const int NOISE_REDUCTION = 1000;
-
 
 //definition of writer
 
@@ -46,6 +35,22 @@ GstreamerWriter::~GstreamerWriter()
         pipeline_ = nullptr;
     }
 
+}
+
+
+void GstreamerWriter::SetFramerate(std::pair<int, int> framerate) {
+    framerate_ = framerate;
+}
+
+
+void GstreamerWriter::SetSize(int width, int height) {
+    width_ = width;
+    height_ = height;
+}
+
+
+void GstreamerWriter::SetBitrate(int bitrate) {
+    bitrate_ = bitrate;
 }
 
 
