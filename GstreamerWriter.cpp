@@ -8,6 +8,20 @@
 // reference header
 #include "GstreamerWriter.h"
 
+//constant for the writer
+const guint64 SLEEP_TIME_MICROSECONDS = 4000000; 
+//constant for the encoder_ bitrate
+const int BITRATE = 500000;
+const int REF = 4;
+const int PASS = 4;
+const int KEY_INT_MAX = 0;
+const gboolean BYTE_STREAM = TRUE;
+const guint TUNE = 0x00000004;
+const int NOISE_REDUCTION = 1000;
+
+
+//definition of writer
+
 GstreamerWriter::~GstreamerWriter()
 {
     if (appSrc_)
@@ -15,23 +29,29 @@ GstreamerWriter::~GstreamerWriter()
         GstFlowReturn retflow;
         g_signal_emit_by_name(appSrc_, "end-of-stream", &retflow);
         std::cout << "EOS sended. Writing last several frame..." << std::endl;
-        g_usleep(4000000);
+
+        //when handling end of stream signal, given some extra time for write the last several frames
+        g_usleep(SLEEP_TIME_MICROSECONDS);
         std::cout << "Writing Done!" << std::endl;
         if (retflow != GST_FLOW_OK)
         {
             std::cerr << "We got some error when sending eos!" << std::endl;
         }
     }
+
     if (pipeline_)
     {
         gst_element_set_state(pipeline_, GST_STATE_NULL);
         gst_object_unref(pipeline_);
         pipeline_ = nullptr;
     }
+
 }
+
 
 int GstreamerWriter::Open(const std::string url)
 {
+
     appSrc_ = gst_element_factory_make("appsrc", "AppSrc");
     queue_ = gst_element_factory_make("queue", "QueueWrite");
     videoConvert_ = gst_element_factory_make("videoconvert", "Videoconvert");
@@ -39,6 +59,7 @@ int GstreamerWriter::Open(const std::string url)
     capsFilter_ = gst_element_factory_make("capsfilter", "Capsfilter");
     mux_ = gst_element_factory_make("qtmux", "Qtmux");
     sink_ = gst_element_factory_make("filesink", "OutputFile");
+
 
     // Create the empty pipeline
     pipeline_ = gst_pipeline_new("encode-pipeline");
@@ -48,6 +69,7 @@ int GstreamerWriter::Open(const std::string url)
         std::cerr << "Not all elements could be created" << std::endl;
         return -1;
     }
+
     //  src format
     std::string srcFmt = "BGR";
 
@@ -60,7 +82,8 @@ int GstreamerWriter::Open(const std::string url)
 
     g_object_set(G_OBJECT(sink_), "location", url.c_str(), nullptr);
 
-    g_object_set(G_OBJECT(encoder_), "bitrate", 500000, "ref", 4, "pass", 4 , "key-int-max", 0, "byte-stream", TRUE, "tune", 0x00000004, "noise-reduction", 1000, NULL);
+    // g_object_set(G_OBJECT(encoder_), "bitrate", 500000, "ref", 4, "pass", 4 , "key-int-max", 0, "byte-stream", TRUE, "tune", 0x00000004, "noise-reduction", 1000, NULL);
+    g_object_set(G_OBJECT(encoder_), "bitrate", BITRATE, "ref", REF, "pass", PASS, "key-int-max", KEY_INT_MAX, "byte-stream", BYTE_STREAM, "tune", TUNE, "noise-reduction", NOISE_REDUCTION, NULL);
 
     // Build the pipeline
     gst_bin_add_many(GST_BIN(pipeline_), appSrc_, queue_, videoConvert_, encoder_, capsFilter_, mux_, sink_, nullptr);
@@ -71,6 +94,7 @@ int GstreamerWriter::Open(const std::string url)
         return -1;
     }
 
+
     // Start playing
     auto ret = gst_element_set_state(pipeline_, GST_STATE_PLAYING);
     if (ret == GST_STATE_CHANGE_FAILURE)
@@ -79,49 +103,10 @@ int GstreamerWriter::Open(const std::string url)
         return -1;
     }
 
-    // // //******************************new
-    // // //
-    // GstBus* bus = gst_element_get_bus(pipeline_);
-    // GstBusFunc busCallback = [](GstBus *bus, GstMessage *msg, gpointer user_data) -> gboolean {
-    //     VideoWriterRaw *self = static_cast<VideoWriterRaw *>(user_data);
-
-    //     switch (GST_MESSAGE_TYPE(msg)) {
-    //         case GST_MESSAGE_ERROR: {
-    //             GError *err = nullptr;
-    //             gchar *debug_info = nullptr;
-    //             gst_message_parse_error(msg, &err, &debug_info);
-    //             std::cerr << "Error received from element " << GST_OBJECT_NAME(msg->src) << ": " << err->message << std::endl;
-    //             std::cerr << "Debugging information: " << (debug_info ? debug_info : "none") << std::endl;
-    //             g_clear_error(&err);
-    //             g_free(debug_info);
-    //             break;
-    //         }
-    //         case GST_MESSAGE_EOS:
-    //             std::cout << "End-Of-Stream reached." << std::endl;
-    //             break;
-    //         case GST_MESSAGE_STATE_CHANGED:
-
-    //             if (GST_MESSAGE_SRC(msg) == GST_OBJECT(self->pipeline_)) {
-    //                 GstState old_state, new_state, pending_state;
-    //                 gst_message_parse_state_changed(msg, &old_state, &new_state, &pending_state);
-    //                 std::cout << "Pipeline state changed from " << gst_element_state_get_name(old_state)
-    //                         << " to " << gst_element_state_get_name(new_state) << "." << std::endl;
-    //             }
-    //             break;
-    //         default:
-
-    //             break;
-    //     }
-
-    //     return TRUE;
-    // };
-
-    // // Add watch
-    // gst_bus_add_watch(bus, busCallback, this);
-    // // //******************************new
 
     return 0;
 }
+
 
 int GstreamerWriter::PushData2Pipeline(const std::vector<unsigned char> &frame, double timestamp)
 {
@@ -162,7 +147,11 @@ int GstreamerWriter::PushData2Pipeline(const std::vector<unsigned char> &frame, 
     return 0;
 }
 
+
 int GstreamerWriter::Write(const std::vector<unsigned char> &frame, double timestamp)
 {
     return PushData2Pipeline(frame, timestamp);
 }
+
+//end of writer
+

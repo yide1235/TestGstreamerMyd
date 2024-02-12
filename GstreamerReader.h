@@ -1,15 +1,44 @@
 //system library
 #pragma once  //make sure not duplicate reference
 #include <string>
-#include <algorithm>
-#include <map>
 #include <vector>
 
 //external library
 #include <gst/gst.h>
 
 
+
+// YUV to RGB convert coefficients
+const float COEFF_R_V = 1.402f;
+const float COEFF_G_U = -0.344136f;
+const float COEFF_G_V = -0.714136f;
+const float COEFF_B_U = 1.772f;
+const float BIAS = 128.0f;
+const int COLOR_MIN_CPU = 0;
+const int COLOR_MAX_CPU = 255;
+const int COLOR_CHANNELS_CPU = 3; 
+
+
+
 class GstreamerReader {
+
+public:
+
+
+    ~GstreamerReader();
+
+	int Open(const std::string& url);
+
+	int Read(std::vector<unsigned char>& buffer, double& timestamp);
+
+	std::pair<int, int> Framerate();
+
+	void InputOriginSize(const int width, const int height);
+	
+	int GetHeight();
+
+	int GetWidth();
+
 
 
 private:
@@ -38,31 +67,6 @@ private:
     std::vector<unsigned char> framebuffer;
     std::vector<unsigned char> bgrBuffer;
 
-
-public:
-
-
-
-	int Open(const std::string& url);
-
-	int Read(std::vector<unsigned char>& buffer, double& timestamp);
-
-	std::pair<int, int> Framerate() {
-		return framerate_;
-	}
-
-
-	void InputOriginSize(const int width, const int height) {
-		width_ = width;
-		height_ = height;
-	}
-
-	~GstreamerReader();
-
-	
-	int GetHeight();
-
-	int GetWidth();
 
 
 };

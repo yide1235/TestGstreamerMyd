@@ -11,27 +11,11 @@
 
 class GstreamerWriter {
 
-private:
-
-    int PushData2Pipeline(const  std::vector<unsigned char>& frame, double timestamp);
-    GstElement* pipeline_;
-    GstElement* appSrc_;
-    GstElement* queue_;
-    GstElement* videoConvert_;
-    GstElement* encoder_;
-    GstElement* capsFilter_;
-    GstElement* mux_;
-    GstElement* sink_;
-    int width_ = 0;
-    int height_ = 0;
-    int bitrate_ = 0;
-    std::pair<int, int> framerate_{ 30, 1 };
-
-
 
 public:
 
     ~GstreamerWriter();
+    
 
     int Open(const std::string url);
 
@@ -53,6 +37,26 @@ public:
 
 
     int Write(const std::vector<unsigned char>& frame, double timestamp);
+
+
+
+private:
+
+    int PushData2Pipeline(const  std::vector<unsigned char>& frame, double timestamp);
+    GstElement* pipeline_;
+    GstElement* appSrc_;
+    GstElement* queue_;
+    GstElement* videoConvert_;
+    GstElement* encoder_;
+    GstElement* capsFilter_;
+    GstElement* mux_;
+    GstElement* sink_;
+    int width_ = 0;
+    int height_ = 0;
+    int bitrate_ = 0;
+    //default value for frame rate
+    std::pair<int, int> framerate_{ 30, 1 };
+
 
 
 };

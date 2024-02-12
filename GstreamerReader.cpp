@@ -6,16 +6,6 @@
 
 
 // YUV to RGB part:
-// YUV to RGB convert coefficients
-const float COEFF_R_V = 1.402f;
-const float COEFF_G_U = -0.344136f;
-const float COEFF_G_V = -0.714136f;
-const float COEFF_B_U = 1.772f;
-const float BIAS = 128.0f;
-const int COLOR_MIN_CPU = 0;
-const int COLOR_MAX_CPU = 255;
-const int COLOR_CHANNELS_CPU = 3; 
-
 
 bool GstreamerReader::yuv420_to_rgb888(const std::vector<unsigned char>& yuv, int width, int height, std::vector<unsigned char>& rgb) {
     int uvSize = width * height / 4;
@@ -48,6 +38,7 @@ bool GstreamerReader::yuv420_to_rgb888(const std::vector<unsigned char>& yuv, in
 
 
 
+
 //definition of reader
 
 GstreamerReader::~GstreamerReader() {
@@ -57,7 +48,6 @@ GstreamerReader::~GstreamerReader() {
 		pipeline_ = nullptr;
 	}
 }
-
 
 int GstreamerReader::GetWidth() {
 	std::cout << "Width: " << paddedWidth_  << std::endl;
@@ -76,56 +66,27 @@ int GstreamerReader::Read(std::vector<unsigned char>& frame, double& timestamp) 
 }
 
 
+std::pair<int, int> GstreamerReader::Framerate() {
+	return framerate_;
+}
+
+
+void GstreamerReader::InputOriginSize(const int width, const int height) {
+	width_ = width;
+	height_ = height;
+}
 
 
 
 
-
-
-
-
-
-
+//helper function for reader open
 static inline void QtdemuxPadAddedCb(GstElement* qtdemux, GstPad* pad, GstElement* queue) {
 	gst_element_link_pads(qtdemux, GST_PAD_NAME(pad), queue, nullptr);
 }
 
 
 
-static inline void ErrHandle(GstElement* pipeline) {
-	// Wait until error or EOS
-	auto bus = gst_element_get_bus(pipeline);
-	auto msg = gst_bus_timed_pop_filtered(bus, GST_CLOCK_TIME_NONE, (GstMessageType)(GST_MESSAGE_ERROR | GST_MESSAGE_EOS));
-	// Message handling
-	if (msg != nullptr) {
-		switch (GST_MESSAGE_TYPE(msg)) {
-		case GST_MESSAGE_ERROR: {
-			GError* err = nullptr;
-			gchar* debug_info = nullptr;
-			gst_message_parse_error(msg, &err, &debug_info);
-			std::cerr << "Error received:" << err->message << std::endl;
-			if (debug_info) {
-				std::cerr << "Debugging information:" << debug_info << std::endl;
-			}
-			g_clear_error(&err);
-			g_free(debug_info);
-		}
-							  break;
-		case GST_MESSAGE_EOS:
-			std::cout << "End-Of-Stream reached" << std::endl;
-			break;
-		default:
-			std::cout << "Unexpected message received" << std::endl;
-			break;
-		}
-		gst_message_unref(msg);
-	}
-	// Free resources
-	gst_object_unref(bus);
-}
-
-
-
+//helper function for read function
 int GstreamerReader::RecvDecodedFrame(std::vector<unsigned char>& frame, double& timestamp) {
 	GstSample* sample;
 
@@ -197,7 +158,6 @@ int GstreamerReader::RecvDecodedFrame(std::vector<unsigned char>& frame, double&
 int GstreamerReader::Open(const std::string& url) {
 	// create the elements
 
-	//
 	source_ = gst_element_factory_make("filesrc", "InputFile");
 	qtdemux_ = gst_element_factory_make("qtdemux", "QtDemux");
 	queue_ = gst_element_factory_make("queue", "QueueReader");
@@ -213,9 +173,11 @@ int GstreamerReader::Open(const std::string& url) {
 		std::cerr << "Not all elements could be created" << std::endl;
 		return -1;
 	}
+
 	// Modify element properties
 	g_object_set(G_OBJECT(source_), "location", url.c_str(), nullptr);
 	g_object_set(G_OBJECT(sink_), "emit-signals", TRUE, "max-buffers", 1, nullptr);
+
 	// Build the pipeline
 	gst_bin_add_many(GST_BIN(pipeline_), source_, qtdemux_, queue_, h264parse_, omxh264dec_, sink_, nullptr);
 	//gst_bin_add_many(GST_BIN(pipeline_), source_, qtdemux_, queue_, sink_, nullptr);
@@ -224,12 +186,14 @@ int GstreamerReader::Open(const std::string& url) {
 		// gst_object_unref(pipeline_);
 		return -1;
 	}
+
 	if (gst_element_link_many(queue_, h264parse_, omxh264dec_, sink_, nullptr) != TRUE) {
 		//if (gst_element_link_many(queue_, sink_, nullptr) != TRUE) {
 		std::cerr << "queue, h264parse, omxh264dec, and sink could not be linked" << std::endl;
 		// gst_object_unref(pipeline);
 		return -1;
 	}
+
 	// dynamic padded connect between demux and queue
 	g_signal_connect(qtdemux_, "pad-added", (GCallback)QtdemuxPadAddedCb, queue_);
 	GstStateChangeReturn ret = gst_element_set_state(pipeline_, GST_STATE_PLAYING);
@@ -237,6 +201,7 @@ int GstreamerReader::Open(const std::string& url) {
 		std::cerr << "Unable to set the pipeline to the paused state" << std::endl;
 		return -1;
 	}
+
 	GstSample* sample;
 	g_signal_emit_by_name(sink_, "pull-preroll", &sample);
 	if (sample) {
@@ -266,10 +231,48 @@ int GstreamerReader::Open(const std::string& url) {
 		std::cerr << "Unable to set the pipeline to the playing state" << std::endl;
 		return -1;
 	}
-	// handle error or EOS. Atention: error handle will block, so don't use it.
+	// handle error or EOS. Not used now
 	// ErrHandle(pipeline_);
+
 	return 0;
 }
+
+//end of reader
+
+
+
+// //this is testing function:
+// static inline void ErrHandle(GstElement* pipeline) {
+// 	// Wait until error or EOS
+// 	auto bus = gst_element_get_bus(pipeline);
+// 	auto msg = gst_bus_timed_pop_filtered(bus, GST_CLOCK_TIME_NONE, (GstMessageType)(GST_MESSAGE_ERROR | GST_MESSAGE_EOS));
+// 	// Message handling
+// 	if (msg != nullptr) {
+// 		switch (GST_MESSAGE_TYPE(msg)) {
+// 		case GST_MESSAGE_ERROR: {
+// 			GError* err = nullptr;
+// 			gchar* debug_info = nullptr;
+// 			gst_message_parse_error(msg, &err, &debug_info);
+// 			std::cerr << "Error received:" << err->message << std::endl;
+// 			if (debug_info) {
+// 				std::cerr << "Debugging information:" << debug_info << std::endl;
+// 			}
+// 			g_clear_error(&err);
+// 			g_free(debug_info);
+// 		}
+// 							  break;
+// 		case GST_MESSAGE_EOS:
+// 			std::cout << "End-Of-Stream reached" << std::endl;
+// 			break;
+// 		default:
+// 			std::cout << "Unexpected message received" << std::endl;
+// 			break;
+// 		}
+// 		gst_message_unref(msg);
+// 	}
+// 	// Free resources
+// 	gst_object_unref(bus);
+// }
 
 
 
